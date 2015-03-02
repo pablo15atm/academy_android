@@ -6,6 +6,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -26,7 +27,7 @@ import es.academy.solidgear.surveyx.ui.activities.SurveyActivity;
 import es.academy.solidgear.surveyx.ui.views.AnswerCheckBox;
 import es.academy.solidgear.surveyx.ui.views.AnswerRadioButton;
 
-public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChangeListener{
+public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener{
     private static final int UNCHECKED_VALUE = -1;
 
     private ViewGroup.LayoutParams PADDING_LAYOUT_PARAMS;
@@ -138,6 +139,7 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
             if(currentQuestion.getType().equals("select-multiple")){
                 AnswerCheckBox checkBox = new AnswerCheckBox(getActivity(), option.getText());
                 checkBox.setTag(option.getId());
+                checkBox.setOnCheckedChangeListener(this);
                 mAnswersOutlet.addView(checkBox);
             }
 
@@ -155,6 +157,7 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
             mAnswersOutlet.addView(paddingView);
 
         }
+        mResponseSelected.clear();
     }
 
     public int getCurrentQuestion() {
@@ -173,5 +176,23 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
 
         mActivity.enableButton(enabled);
         mActivity.setLabel(mIsLastQuestion);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        boolean enabled = false;
+
+        if((isChecked==true)&&(mResponseSelected.contains((int)buttonView.getTag())==false)) {
+            mResponseSelected.add((int) buttonView.getTag());
+        }
+        if((isChecked==false)&&(mResponseSelected.contains((int)buttonView.getTag())==true)) {
+            mResponseSelected.remove(buttonView.getTag());
+        }
+        enabled=mResponseSelected.size()>0;
+
+        mActivity.enableButton(enabled);
+        mActivity.setLabel(mIsLastQuestion);
+
+        return;
     }
 }
