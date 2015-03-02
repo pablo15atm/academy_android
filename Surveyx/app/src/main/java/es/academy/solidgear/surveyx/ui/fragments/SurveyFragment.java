@@ -23,6 +23,7 @@ import es.academy.solidgear.surveyx.model.OptionModel;
 import es.academy.solidgear.surveyx.model.QuestionModel;
 import es.academy.solidgear.surveyx.services.requests.GetQuestionRequest;
 import es.academy.solidgear.surveyx.ui.activities.SurveyActivity;
+import es.academy.solidgear.surveyx.ui.views.AnswerCheckBox;
 import es.academy.solidgear.surveyx.ui.views.AnswerRadioButton;
 
 public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChangeListener{
@@ -134,16 +135,25 @@ public class SurveyFragment extends Fragment implements RadioGroup.OnCheckedChan
 
         for (OptionModel option : currentQuestion.getChoices()) {
 
-            // Create radio button with answer
-            AnswerRadioButton radioButton = new AnswerRadioButton(getActivity(), option.getText());
-            radioButton.setTag(option.getId());
-            mAnswersOutlet.addView(radioButton);
+            if(currentQuestion.getType().equals("select-multiple")){
+                AnswerCheckBox checkBox = new AnswerCheckBox(getActivity(), option.getText());
+                checkBox.setTag(option.getId());
+                mAnswersOutlet.addView(checkBox);
+            }
+
+            else {
+                // Create radio button with answer
+                AnswerRadioButton radioButton = new AnswerRadioButton(getActivity(), option.getText());
+                radioButton.setTag(option.getId());
+                mAnswersOutlet.addView(radioButton);
+            }
 
             // Add padding for each answer
             // There is a bug in API 16 and below that with padding method of RadioButton
             View paddingView = new View(getActivity());
             paddingView.setLayoutParams(PADDING_LAYOUT_PARAMS);
             mAnswersOutlet.addView(paddingView);
+
         }
     }
 
