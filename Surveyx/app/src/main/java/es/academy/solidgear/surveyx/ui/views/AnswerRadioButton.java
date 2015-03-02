@@ -22,7 +22,7 @@ public class AnswerRadioButton extends RadioButton {
         setLayoutParams(layoutParams);
 
         // Radio button
-        setButtonDrawable(R.drawable.custom_radio_button);
+        // setButtonDrawable(R.drawable.custom_radio_button);
 
         // Text
         setText(option);
